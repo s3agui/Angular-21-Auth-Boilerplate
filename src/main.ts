@@ -9,4 +9,5 @@ if (environment.production) {
     enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule, { ngZone: 'zone.js'}) .catch(err => console.error(err));
+platformBrowserDynamic().bootstrapModule(AppModule, { ngZone: 'zone.js' })
+    .catch(err => console.error(err));

@@ -13,6 +13,8 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
     "paths": {
       "@app/*": ["src/app/*"],
       "@environments/*": ["src/environments/*"]
