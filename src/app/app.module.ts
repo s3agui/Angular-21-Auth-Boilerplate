@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
-import { appInitializer, ErrorInterceptor, JwtInterceptor, fakeBackendProvider } from './_helpers';
+import { appInitializer, ErrorInterceptor, JwtInterceptor } from './_helpers';
 import { AccountService } from './_services';
 
 @NgModule({
@@ -27,10 +27,8 @@ import { AccountService } from './_services';
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [AccountService], multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
-        // provider used to create fake backend — remove these two lines to use a real backend
-        fakeBackendProvider
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+        // fake backend removed — using real API now
     ],
     bootstrap: [AppComponent]
 })
