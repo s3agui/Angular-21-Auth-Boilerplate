@@ -1,8 +1,4 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
-@Component({
-    selector: "admin-overview",
-    templateUrl: "overview.component.html",
-    standalone: false
-})
+@Component({ templateUrl: 'overview.component.html' })
 export class OverviewComponent { }

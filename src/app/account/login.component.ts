@@ -1,23 +1,21 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-
 import { AccountService, AlertService } from '@app/_services';
 
-@Component({ templateUrl: 'login.component.html', standalone: false })
+@Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
-    form!: FormGroup;
-    submitting = false;
+    form!: UntypedFormGroup;
+    loading = false;
     submitted = false;
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService,
-        private cdr: ChangeDetectorRef
+        private alertService: AlertService
     ) {}
 
     ngOnInit() {
@@ -32,30 +30,25 @@ export class LoginComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true;
-        this.cdr.detectChanges();
 
+        // reset alerts on submit
         this.alertService.clear();
 
-        if (this.form.invalid) {
-            return;
-        }
+        // stop here if form is invalid
+        if (this.form.invalid) return;
 
-        this.submitting = true;
-        this.cdr.detectChanges();
-
-        this.accountService.login(this.f.email.value, this.f.password.value)
+        this.loading = true;
+        this.accountService.login(this.f['email'].value, this.f['password'].value)
             .pipe(first())
             .subscribe({
                 next: () => {
+                    // get return url from query parameters or default to home page
                     const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
                     this.router.navigateByUrl(returnUrl);
                 },
                 error: error => {
-                    setTimeout(() => {
-                        this.alertService.error(error);
-                        this.submitting = false;
-                        this.cdr.detectChanges();
-                    });
+                    this.alertService.error(error);
+                    this.loading = false;
                 }
             });
     }

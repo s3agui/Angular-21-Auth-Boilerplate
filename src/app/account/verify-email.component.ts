@@ -1,27 +1,31 @@
-import{Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
-
 import { AccountService, AlertService } from '@app/_services';
 
-enum EmailStatus {
+enum TokenStatus {
     Verifying,
     Failed
 }
 
-@Component({ templateUrl: 'verify-email.component.html', standalone: false })
+@Component({ templateUrl: 'verify-email.component.html' })
 export class VerifyEmailComponent implements OnInit {
-    EmailStatus = EmailStatus;
-    emailStatus = EmailStatus.Verifying;
+    TokenStatus = TokenStatus;
+    tokenStatus = TokenStatus.Verifying;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
         private alertService: AlertService
-    ) { }
-    ngOnInit(){
+    ) {}
+
+    ngOnInit() {
         const token = this.route.snapshot.queryParams['token'];
+
+        // remove token from url to prevent http referer leaking
+        this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
+
         this.accountService.verifyEmail(token)
             .pipe(first())
             .subscribe({
@@ -30,9 +34,8 @@ export class VerifyEmailComponent implements OnInit {
                     this.router.navigate(['/account/login']);
                 },
                 error: () => {
-                    this.emailStatus = EmailStatus.Failed;
+                    this.tokenStatus = TokenStatus.Failed;
                 }
             });
     }
-   
 }

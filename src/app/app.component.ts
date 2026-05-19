@@ -1,19 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AccountService } from './_services';
+import { Account, Role } from './_models';
 
-import { AccountService } from '@app/_services';
-import { Account, Role } from '@app/_models';
-
-@Component({ selector: 'app-root', templateUrl: 'app.component.html', standalone: false })
-export class AppComponent {
+@Component({ selector: 'app-root', templateUrl: 'app.component.html' })
+export class AppComponent implements OnInit {
     Role = Role;
-    account?: Account | null;
+    account: Account | null = null;
 
-    constructor(private accountService: AccountService) {
+    constructor(private accountService: AccountService) {}
+
+    ngOnInit() {
         this.accountService.account.subscribe(x => this.account = x);
     }
 
     logout() {
         this.accountService.logout();
     }
-
 }

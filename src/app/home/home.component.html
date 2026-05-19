@@ -1,5 +1,13 @@
 <div class="p-4">
     <div class="container">
-        <h1>Hi {{account?.firstname}}!</h1>
-        <p>You're logged in with Angular 21 JWT Authentication & Authorization boilerplate!</p>
+        <h1>Hi {{account?.firstName}}!</h1>
+        <p>You're logged in with Angular &amp; JWT!!</p>
+        <h3>All accounts from secure api end point:</h3>
+        <p *ngIf="loading">Loading...</p>
+        <ul *ngIf="accounts">
+            <li *ngFor="let account of accounts">
+                {{account.email}} ({{account.role}})
+            </li>
+        </ul>
+    </div>
 </div>

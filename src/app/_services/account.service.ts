@@ -1,10 +1,10 @@
-import{ Injectable } from '@angular/core';
-import{ Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; 
-import { BehaviorSubject, finalize, Observable } from 'rxjs';
-
-import{ environment } from '@environments/environment';
-import{ Account } from '@app/_models';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, finalize } from 'rxjs/operators';
+import { environment } from '@environments/environment';
+import { Account } from '@app/_models';
 
 const baseUrl = `${environment.apiUrl}/accounts`;
 
@@ -13,15 +13,12 @@ export class AccountService {
     private accountSubject: BehaviorSubject<Account | null>;
     public account: Observable<Account | null>;
 
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) {
+    constructor(private router: Router, private http: HttpClient) {
         this.accountSubject = new BehaviorSubject<Account | null>(null);
         this.account = this.accountSubject.asObservable();
-    }   
+    }
 
-    public get accountValue(){
+    public get accountValue(): Account | null {
         return this.accountSubject.value;
     }
 
@@ -34,7 +31,7 @@ export class AccountService {
             }));
     }
 
-    logout(){
+    logout() {
         this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
         this.accountSubject.next(null);
@@ -50,9 +47,9 @@ export class AccountService {
             }));
     }
 
-    register(params: any) {
-        return this.http.post(`${baseUrl}/register`, params);
-    } 
+    register(account: any) {
+        return this.http.post(`${baseUrl}/register`, account);
+    }
 
     verifyEmail(token: string) {
         return this.http.post(`${baseUrl}/verify-email`, { token });
@@ -74,7 +71,7 @@ export class AccountService {
         return this.http.get<Account[]>(baseUrl);
     }
 
-    getById(id: string) {
+    getById(id: string | number) {
         return this.http.get<Account>(`${baseUrl}/${id}`);
     }
 
@@ -82,33 +79,38 @@ export class AccountService {
         return this.http.post(baseUrl, params);
     }
 
-    update(id: string, params: any) {
+    update(id: string | number, params: any) {
         return this.http.put(`${baseUrl}/${id}`, params)
-            .pipe(map(x => {
-                if (id == this.accountValue?.id) {
-                    const account = { ...this.accountValue, ...params };
+            .pipe(map((account: any) => {
+                // update stored account if the logged in account is updated
+                if (account.id === this.accountValue?.id) {
+                    // publish updated account to subscribers
+                    account = { ...this.accountValue, ...account };
                     this.accountSubject.next(account);
                 }
-                return x;
+                return account;
             }));
     }
 
-    delete(id: string) {
+    delete(id: string | number) {
         return this.http.delete(`${baseUrl}/${id}`)
             .pipe(finalize(() => {
-                if (id == this.accountValue?.id) {
+                // auto logout if the logged in account was deleted
+                if (id === this.accountValue?.id) {
                     this.logout();
                 }
             }));
-
     }
 
-    private refreshTokenTimeout: any;
+    // helper methods
+    private refreshTokenTimeout?: ReturnType<typeof setTimeout>;
 
     private startRefreshTokenTimer() {
-        const jwtBase64 = this.accountValue?.jwtToken?.split('.')[1];
-        const jwtToken = JSON.parse(atob(jwtBase64!));
+        // parse json object from base64 encoded jwt token
+        const jwtBase64 = this.accountValue!.jwtToken!.split('.')[1];
+        const jwtToken = JSON.parse(atob(jwtBase64));
 
+        // set a timeout to refresh the token a minute before it expires
         const expires = new Date(jwtToken.exp * 1000);
         const timeout = expires.getTime() - Date.now() - (60 * 1000);
         this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);

@@ -1,20 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { SubNavComponent } from './subnav.component';
 import { LayoutComponent } from './layout.component';
 import { OverviewComponent } from './overview.component';
-
-const accountsModule = () => import('./accounts/accounts.module').then(x => x.AccountsModule);
+import { SubNavComponent } from './subnav.component';
 
 const routes: Routes = [
-    { path: '', component: SubNavComponent, outlet: 'subnav' },
     {
-        path: '', component: LayoutComponent,
+        path: '',
+        component: LayoutComponent,
         children: [
             { path: '', component: OverviewComponent },
-            { path: 'accounts', loadChildren: accountsModule }
+            {
+                path: 'accounts',
+                loadChildren: () => import('./accounts/accounts.module').then(x => x.AccountsModule)
+            }
         ]
+    },
+    // subnav shown for all admin routes
+    {
+        path: '',
+        component: SubNavComponent,
+        outlet: 'subnav'
     }
 ];
 

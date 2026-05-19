@@ -1,8 +1,4 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
-@Component({
-    selector: "admin-subnav",
-    templateUrl: "subnav.component.html",
-    standalone: false
-})
-export class SubnavComponent { }
+@Component({ selector: 'app-admin-subnav', templateUrl: 'subnav.component.html' })
+export class SubNavComponent { }
