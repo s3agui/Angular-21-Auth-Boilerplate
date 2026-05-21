@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://your-deployed-backend.onrender.com'
+    apiUrl: 'https://backend-repo-node-mysql-auth-api.onrender.com'
 };
