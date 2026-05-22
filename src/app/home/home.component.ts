@@ -8,6 +8,8 @@ export class HomeComponent implements OnInit {
     account: Account | null = null;
     accounts?: Account[];
     loading = false;
+    adminCount = 0;
+    userCount = 0;
 
     constructor(private accountService: AccountService) {}
 
@@ -19,6 +21,8 @@ export class HomeComponent implements OnInit {
                 .subscribe(accounts => {
                     this.loading = false;
                     this.accounts = accounts;
+                    this.adminCount = accounts.filter((a: any) => a.role === 'Admin').length;
+                    this.userCount = accounts.filter((a: any) => a.role === 'User').length;
                 });
         }
     }

@@ -16,17 +16,13 @@
         </div>
         <div class="col-md-4">
             <div class="stat-card" style="border-left-color:#1a1a1a">
-                <div class="stat-number">
-                    {{accounts ? (accounts | roleFilter:'Admin').length : 0}}
-                </div>
+                <div class="stat-number">{{adminCount}}</div>
                 <div class="stat-label">Race Directors</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="stat-card">
-                <div class="stat-number">
-                    {{accounts ? (accounts | roleFilter:'User').length : 0}}
-                </div>
+                <div class="stat-number">{{userCount}}</div>
                 <div class="stat-label">Drivers</div>
             </div>
         </div>
@@ -35,7 +31,7 @@
     <!-- User welcome (non-admin) -->
     <div class="f1-card mb-4" *ngIf="account?.role !== Role.Admin">
         <p style="font-size:13px;color:#555;margin:0">
-            You're logged in as a <strong>Driver</strong>. 
+            You're logged in as a <strong>Driver</strong>.
             Visit your <a routerLink="/profile" style="color:#e10600">Profile</a> to update your details.
         </p>
     </div>
@@ -62,7 +58,8 @@
                         {{acc.firstName}} {{acc.lastName}}
                     </div>
                 </div>
-                <span class="role-badge" [class.admin]="acc.role === 'Admin'"
+                <span class="role-badge"
+                      [class.admin]="acc.role === 'Admin'"
                       [class.user]="acc.role !== 'Admin'">
                     {{acc.role === 'Admin' ? 'Race Director' : 'Driver'}}
                 </span>
