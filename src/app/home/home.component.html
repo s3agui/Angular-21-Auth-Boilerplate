@@ -1,13 +1,73 @@
-<div class="p-4">
-    <div class="container">
-        <h1>Hi {{account?.firstName}}!</h1>
-        <p>You're logged in with Angular &amp; JWT!!</p>
-        <h3>All accounts from secure api end point:</h3>
-        <p *ngIf="loading">Loading...</p>
-        <ul *ngIf="accounts">
-            <li *ngFor="let account of accounts">
-                {{account.email}} ({{account.role}})
-            </li>
-        </ul>
+<div class="page-container">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Hi {{account?.firstName}}! <span style="color:#e10600">👋</span></h1>
+        <p>Authenticated session active — Angular & JWT</p>
     </div>
+
+    <!-- Stats Row (Admin only) -->
+    <div class="row g-3 mb-4" *ngIf="account?.role === Role.Admin">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-number">{{accounts?.length || 0}}</div>
+                <div class="stat-label">Total Drivers</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="border-left-color:#1a1a1a">
+                <div class="stat-number">
+                    {{accounts ? (accounts | roleFilter:'Admin').length : 0}}
+                </div>
+                <div class="stat-label">Race Directors</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-number">
+                    {{accounts ? (accounts | roleFilter:'User').length : 0}}
+                </div>
+                <div class="stat-label">Drivers</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User welcome (non-admin) -->
+    <div class="f1-card mb-4" *ngIf="account?.role !== Role.Admin">
+        <p style="font-size:13px;color:#555;margin:0">
+            You're logged in as a <strong>Driver</strong>. 
+            Visit your <a routerLink="/profile" style="color:#e10600">Profile</a> to update your details.
+        </p>
+    </div>
+
+    <!-- Accounts List (Admin only) -->
+    <div class="f1-card" *ngIf="account?.role === Role.Admin">
+        <div class="section-title">Pit Wall — All Registered Accounts</div>
+
+        <p *ngIf="loading" style="font-size:13px;color:#aaa">
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Loading accounts...
+        </p>
+
+        <div *ngIf="accounts">
+            <div class="account-row" *ngFor="let acc of accounts; let i = index">
+                <div class="position-num" [class.user]="acc.role !== 'Admin'">
+                    P{{i + 1}}
+                </div>
+                <div class="account-email">
+                    <div style="font-size:13px;font-weight:500;color:#1a1a1a">
+                        {{acc.email}}
+                    </div>
+                    <div style="font-size:11px;color:#aaa">
+                        {{acc.firstName}} {{acc.lastName}}
+                    </div>
+                </div>
+                <span class="role-badge" [class.admin]="acc.role === 'Admin'"
+                      [class.user]="acc.role !== 'Admin'">
+                    {{acc.role === 'Admin' ? 'Race Director' : 'Driver'}}
+                </span>
+            </div>
+        </div>
+    </div>
+
 </div>

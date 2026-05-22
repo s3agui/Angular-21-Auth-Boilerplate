@@ -1,13 +1,10 @@
-<div class="d-flex align-items-center" style="min-height: 100vh; background: #f5f5f5;">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-body p-4">
-                        <router-outlet></router-outlet>
-                    </div>
-                </div>
-            </div>
+<div class="account-layout">
+    <div class="account-card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+            <span style="font-size:18px;font-weight:700;color:#e10600;letter-spacing:0.05em">F1</span>
+            <span style="width:1px;height:18px;background:#eee"></span>
+            <span style="font-size:12px;color:#aaa;text-transform:uppercase;letter-spacing:0.06em">Auth System</span>
         </div>
+        <router-outlet></router-outlet>
     </div>
 </div>

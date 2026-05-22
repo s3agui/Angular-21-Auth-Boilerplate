@@ -1,23 +1,32 @@
-<!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="account">
-    <div class="container">
-        <a class="navbar-brand" routerLink="/">Final Project: Full-Stack Authentication System Deployment</a>
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+<!-- F1 Navbar -->
+<nav class="navbar navbar-expand navbar-dark" *ngIf="account">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+            <span class="f1-logo">F1</span>
+            <span class="nav-divider"></span>
+            <span style="font-size:13px;font-weight:500;color:white">
+                Final Project: Auth System
+            </span>
+        </a>
+        <div class="navbar-nav ms-auto d-flex align-items-center">
+            <span class="race-control-badge">Race Control</span>
+            <a class="nav-item nav-link" routerLink="/" routerLinkActive="active"
+               [routerLinkActiveOptions]="{exact: true}">Home</a>
             <a class="nav-item nav-link" routerLink="/profile" routerLinkActive="active">Profile</a>
-            <a *ngIf="account.role === Role.Admin" class="nav-item nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
+            <a *ngIf="account.role === Role.Admin" class="nav-item nav-link"
+               routerLink="/admin" routerLinkActive="active">Admin</a>
             <a class="nav-item nav-link" style="cursor:pointer" (click)="logout()">Logout</a>
         </div>
     </div>
 </nav>
 
-<!-- subnav router outlet (used by admin section) -->
+<!-- Subnav outlet -->
 <router-outlet name="subnav"></router-outlet>
 
-<!-- global alert -->
+<!-- Global alert -->
 <alert></alert>
 
-<!-- main router outlet -->
-<div class="app-container" [class.bg-light]="account">
+<!-- Main router outlet -->
+<div [class.bg-light]="!account">
     <router-outlet></router-outlet>
 </div>

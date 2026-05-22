@@ -13,7 +13,6 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         this.account = this.accountService.accountValue;
-        // only load all accounts for admin users
         if (this.account?.role === Role.Admin) {
             this.loading = true;
             this.accountService.getAll()
