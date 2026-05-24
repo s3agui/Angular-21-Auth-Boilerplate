@@ -130,3 +130,21 @@ Features demonstrated:
 ---
 
 ## 📁 Project Structure
+
+src/app/
+├── _components/     # Shared components (Alert)
+├── _helpers/        # Guards, interceptors, fake backend
+├── _models/         # TypeScript interfaces
+├── _services/       # Account & Alert services
+├── account/         # Login, Register, Verify, Forgot/Reset Password
+├── admin/           # Admin panel + account management
+├── home/            # Home page
+└── profile/         # Profile view & update
+
+---
+
+## 👨‍🎓 Course Information
+
+- **Subject:** Full-Stack Web Development
+- **Project:** Final Project — Full-Stack Authentication System Deployment
+- **Student:** Carlos Jose Cuerda
